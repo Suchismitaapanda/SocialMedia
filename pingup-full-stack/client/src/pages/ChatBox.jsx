@@ -65,17 +65,26 @@ const ChatBox = () => {
   },[userId])
 
   useEffect(()=>{
-    if(connections.length > 0){
-      const user = connections.find(connection => connection._id === userId)
-      setUser(user)
-    }
+    const selectedUser = connections.find(connection => connection._id === userId)
+    setUser(selectedUser || null)
   },[connections, userId])
 
   useEffect(()=>{
     messagesEndRef.current?.scrollIntoView({behavior: "smooth" })
   },[messages])
 
-  return user && (
+  if (!user) {
+    return (
+      <div className='flex h-screen items-center justify-center bg-slate-50 px-4'>
+        <div className='w-full max-w-lg rounded-xl border border-slate-200 bg-white p-6 shadow-sm'>
+          <h2 className='text-xl font-semibold text-slate-800'>Loading chat...</h2>
+          <p className='mt-2 text-sm text-slate-600'>Your connections are still loading, or this user is not in your connections list yet.</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col h-screen'>
       <div className='flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-300'>
         <img src={user.profile_picture} alt="" className="size-8 rounded-full"/>

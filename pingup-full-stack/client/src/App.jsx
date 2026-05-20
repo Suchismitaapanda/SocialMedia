@@ -17,9 +17,10 @@ import { fetchUser } from './features/user/userSlice'
 import { fetchConnections } from './features/connections/connectionsSlice'
 import { addMessage } from './features/messages/messagesSlice'
 import Notification from './components/Notification'
+import Loading from './components/Loading'
 
 const App = () => {
-  const {user} = useUser()
+  const {user, isLoaded} = useUser()
   const {getToken } = useAuth()
   const {pathname} = useLocation()
   const pathnameRef = useRef(pathname)
@@ -66,18 +67,22 @@ const App = () => {
   return (
     <>
       <Toaster />
-      <Routes>
-        <Route path='/' element={ !user ? <Login /> : <Layout/>}>
-          <Route index element={<Feed/>}/>
-          <Route path='messages' element={<Messages/>}/>
-          <Route path='messages/:userId' element={<ChatBox/>}/>
-          <Route path='connections' element={<Connections/>}/>
-          <Route path='discover' element={<Discover/>}/>
-          <Route path='profile' element={<Profile/>}/>
-          <Route path='profile/:profileId' element={<Profile/>}/>
-          <Route path='create-post' element={<CreatePost/>}/>
-        </Route>
-      </Routes>
+      {!isLoaded ? (
+        <Loading />
+      ) : (
+        <Routes>
+          <Route path='/' element={ !user ? <Login /> : <Layout/>}>
+            <Route index element={<Feed/>}/>
+            <Route path='messages' element={<Messages/>}/>
+            <Route path='messages/:userId' element={<ChatBox/>}/>
+            <Route path='connections' element={<Connections/>}/>
+            <Route path='discover' element={<Discover/>}/>
+            <Route path='profile' element={<Profile/>}/>
+            <Route path='profile/:profileId' element={<Profile/>}/>
+            <Route path='create-post' element={<CreatePost/>}/>
+          </Route>
+        </Routes>
+      )}
     </>
   )
 }
